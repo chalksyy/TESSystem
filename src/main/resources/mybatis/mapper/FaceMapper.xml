@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cfs.mapper.FaceMapper">
+
+    <resultMap id="BaseResultMap" type="com.cfs.entities.Face">
+        <id column="id" property="id"></id>
+        <result column="user_id" property="userId"></result>
+        <result column="user_type" property="userType"></result>
+        <result column="face" property="face"></result>
+        <result column="create_time" property="createTime"></result>
+    </resultMap>
+
+    <insert id="addFace">
+        insert into face
+        values(null,#{userId},0,#{face},#{createTime})
+    </insert>
+
+</mapper>
