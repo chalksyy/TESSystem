@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cfs.mapper.PaperMapper">
+<mapper namespace="com.syy.tessystem.mapper.PaperMapper">
 
-    <resultMap id="BaseResultMap" type="com.cfs.entities.Paper">
+    <resultMap id="BaseResultMap" type="com.syy.tessystem.entities.Paper">
         <id column="id" property="id"></id>
         <result column="paper_name" property="paperName"></result>
         <result column="max_mark" property="maxMark"></result>
@@ -12,7 +12,7 @@
         <result column="change" property="change"></result>
     </resultMap>
 
-    <insert id="addPaper" useGeneratedKeys="true" parameterType="com.cfs.entities.Paper" keyProperty="id">
+    <insert id="addPaper" useGeneratedKeys="true" parameterType="com.syy.tessystem.entities.Paper" keyProperty="id">
         insert into paper(paper_name, max_mark, creater_id, course_id, create_time, `change`)
         VALUES (#{paperName},#{maxMark},#{creatorId},#{courseId},#{createTime},#{change})
     </insert>
@@ -53,7 +53,7 @@
 
 
 
-    <select id="getPaper" resultType="com.cfs.entities.Paper">
+    <select id="getPaper" resultType="com.syy.tessystem.entities.Paper">
         select *
         from paper
         where id = #{id}

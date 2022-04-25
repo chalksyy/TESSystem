@@ -1,11 +1,11 @@
 package com.syy.tessystem.controller;
 
-import com.cfs.entities.AiFaceObject;
-import com.cfs.entities.CommonResult;
-import com.cfs.service.FaceService;
-import com.cfs.util.FaceDetection;
-import com.cfs.util.FaceRegistration;
-import com.cfs.util.FaceSearch;
+import com.syy.tessystem.entities.AiFaceObject;
+import com.syy.tessystem.entities.CommonResult;
+import com.syy.tessystem.service.FaceService;
+import com.syy.tessystem.util.FaceDetection;
+import com.syy.tessystem.util.FaceRegistration;
+import com.syy.tessystem.util.FaceSearch;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -64,7 +64,6 @@ public class FaceController {
         }
 
         JSONObject faceDetection = FaceDetection.Facedetection(AiFaceObject.getClient(), imageBase64, "BASE64");
-        System.out.println(faceDetection);
 
         if ("SUCCESS".equals(faceDetection.get("error_msg"))){
             JSONObject faceregistrtion = FaceRegistration.Faceregistrtion(AiFaceObject.getClient(), "student", "3", imageBase64, "BASE64");

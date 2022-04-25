@@ -1,11 +1,11 @@
 package com.syy.tessystem.controller;
 
-import com.cfs.entities.CommonResult;
-import com.cfs.entities.QuestionEntity;
-import com.cfs.entities.QuestionPublicComp;
-import com.cfs.entities.QuestionPublicSc;
-import com.cfs.service.QuestionService;
-import com.cfs.util.JavaWebToken;
+import com.syy.tessystem.entities.CommonResult;
+import com.syy.tessystem.entities.QuestionEntity;
+import com.syy.tessystem.entities.QuestionPublicComp;
+import com.syy.tessystem.entities.QuestionPublicSc;
+import com.syy.tessystem.service.QuestionService;
+import com.syy.tessystem.util.JavaWebToken;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;

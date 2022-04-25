@@ -1,8 +1,8 @@
 package com.syy.tessystem.controller;
 
-import com.cfs.entities.CommonResult;
-import com.cfs.entities.Paper;
-import com.cfs.service.PaperService;
+import com.syy.tessystem.entities.CommonResult;
+import com.syy.tessystem.entities.Paper;
+import com.syy.tessystem.service.PaperService;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;

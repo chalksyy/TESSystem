@@ -1,9 +1,9 @@
 package com.syy.tessystem.controller;
 
-import com.cfs.entities.CommonResult;
-import com.cfs.entities.Teacher;
-import com.cfs.service.TeacherService;
-import com.cfs.util.JavaWebToken;
+import com.syy.tessystem.entities.CommonResult;
+import com.syy.tessystem.entities.Teacher;
+import com.syy.tessystem.service.TeacherService;
+import com.syy.tessystem.util.JavaWebToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;

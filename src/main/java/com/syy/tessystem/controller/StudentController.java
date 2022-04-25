@@ -1,8 +1,8 @@
 package com.syy.tessystem.controller;
 
-import com.cfs.entities.CommonResult;
-import com.cfs.entities.Student;
-import com.cfs.service.StudentService;
+import com.syy.tessystem.entities.CommonResult;
+import com.syy.tessystem.entities.Student;
+import com.syy.tessystem.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
