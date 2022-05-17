@@ -27,11 +27,15 @@ public class StudentController {
     @Resource
     StudentService studentService;
 
+    @PostMapping(value = "/register")
+    public CommonResult register(@RequestBody Map<String,String> map){
+
+        return new CommonResult(200,"添加学生成功",null);
+    }
+
     @PostMapping(value = "/login")
     public CommonResult login(@RequestBody Map<String,String> map) {
 
-//        System.out.println("sNo:"+sNo);
-//        System.out.println("password:"+password);
 
         Integer sNo = Integer.parseInt(map.get("sNo"));
         String password = map.get("password");
@@ -86,36 +90,7 @@ public class StudentController {
     public CommonResult changePwd(@RequestBody Map map) {
         String oldPassword = (String) map.get("oldPassword");
         String token = (String) map.get("token");
-        System.out.println("oldPassword:"+oldPassword);
-        System.out.println("token:"+token);
 
-
-//        String token = (String) map.get("token");
-//        //"data": "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.xxzv08P4YGKnWdyIqVCOaFFQQr7kjQKa1L3BhlrdA48"
-//        String checkResult = studentService.checkup(token);
-//
-//        if (checkResult==null){
-//            return new CommonResult(200,"用户未登录或登录状态失效");
-//        }
-//
-//        String oldPassword = (String) map.get("oldPassword");
-//        String newPassword = (String) map.get("newPassword");
-//        Boolean flag = studentService.checkPwd(token,oldPassword);
-//
-//        String result = "";
-//        if (flag){
-//
-//            studentService.deleteToken(token);
-//            result = studentService.updatePassword(token,newPassword);
-
-//        }
-//
-//
-//        if(result.equals("AC")){
-//            return new CommonResult(100,"修改成功",checkResult);
-//        }else {
-//            return new CommonResult(200,"修改失败",checkResult);
-//        }
         return new CommonResult(200,"修改失败");
 
     }

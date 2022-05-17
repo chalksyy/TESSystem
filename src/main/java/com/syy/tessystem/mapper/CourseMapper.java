@@ -44,6 +44,14 @@ public interface CourseMapper {
      */
     List<Course> selectAll();
 
+    /**
+     * create by: Chalksyy
+     * description: 通过课程名字获得课程，用来检验添加的课程名字是否重复
+     * create time: 2022/5/5 20:05
+     * @return
+     */
+    Course getCourseByName(@Param("courseName") String courseName);
+
     Integer update(@Param("id") Integer id,
                    @Param("number") String number,
                    @Param("credit") Integer credit,

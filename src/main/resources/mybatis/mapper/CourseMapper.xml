@@ -26,6 +26,12 @@
 
     </delete>
 
+    <select id="getCourseByName" resultMap="BaseResultMap">
+        select *
+        from course
+        where course_name = #{courseName}
+    </select>
+
     <select id="selectAll" resultMap="BaseResultMap">
         select *
         from course

@@ -42,6 +42,10 @@ public class QuestionService {
 
     }
 
+    public List<QuestionPublicSc> getQuestionByPaperId(Integer id){
+        return questionMapper.getQuestionByPaperId(id);
+    }
+
     public QuestionPublicSc getQuestionById(Integer id) {
 
         QuestionPublicSc questionPublicSc = questionMapper.get(id);
@@ -160,7 +164,7 @@ public class QuestionService {
 
     public List<QuestionPublicSc> getQuestionScInCondition(Integer courseId, String type, Integer chapterId, Integer modularId, String content) {
 
-        questionMapper.getQuestionScInCondition(courseId,chapterId,modularId,content);
+        questionMapper.getQuestionScInCondition(chapterId,modularId,content);
         return null;
     }
 
@@ -170,10 +174,10 @@ public class QuestionService {
         List<QuestionPublicCompWithName> questionCompInCondition = null;
 
         if ("选择题".equals(type)){
-            questionScInCondition = questionMapper.getQuestionScInCondition(courseId, chapterId, modularId, content);
+            questionScInCondition = questionMapper.getQuestionScInCondition(chapterId, modularId, content);
             return questionScInCondition;
         }else {
-            questionCompInCondition = questionMapper.getQuestionCompInCondition(courseId, chapterId, modularId, content);
+            questionCompInCondition = questionMapper.getQuestionCompInCondition(chapterId, modularId, content);
             return questionCompInCondition;
         }
 
@@ -184,13 +188,13 @@ public class QuestionService {
         }*/
 
     }
-    public List getAllQuestionInConditionWithName(String type, Integer courseId, Integer chapterId, Integer modularId, String content) {
-
+    public List getAllQuestionInConditionWithName(String type,  Integer chapterId, Integer modularId, String content) {
+        System.out.println("type = " + type + ",  chapterId = " + chapterId + ", modularId = " + modularId + ", content = " + content);
         List<QuestionPublicScWithName> questionScInCondition = null;
         List<QuestionPublicCompWithName> questionCompInCondition = null;
 
         if ("选择题".equals(type)){
-            questionScInCondition = questionMapper.getQuestionScInCondition(courseId, chapterId, modularId, content);
+            questionScInCondition = questionMapper.getQuestionScInCondition(chapterId, modularId, content);
             /*SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             for (QuestionPublicScWithName questionPublicScWithName:questionScInCondition){
                 Timestamp createTime = questionPublicScWithName.getCreateTime();
@@ -198,15 +202,9 @@ public class QuestionService {
             }*/
             return questionScInCondition;
         }else {
-            questionCompInCondition = questionMapper.getQuestionCompInCondition(courseId, chapterId, modularId, content);
+            questionCompInCondition = questionMapper.getQuestionCompInCondition(chapterId, modularId, content);
             return questionCompInCondition;
         }
-
-        /*if (map.size()!=0){
-            return map;
-        }else {
-            return null;
-        }*/
 
     }
 

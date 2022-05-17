@@ -68,6 +68,13 @@ public class PaperService {
         }
 
     }
+    public List<Paper> getAllPaper2() {
+
+
+        return paperMapper.getAll();
+
+
+    }
     public Integer deletePaper(Integer paperId) {
 
         Integer result = paperMapper.deletePaper(paperId);

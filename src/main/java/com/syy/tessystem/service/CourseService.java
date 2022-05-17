@@ -99,6 +99,15 @@ public class CourseService {
 
     }
 
+    public Course getCourseByName(String courseName){
+        if (courseMapper.getCourseByName(courseName)!=null){
+            return courseMapper.getCourseByName(courseName);
+        }else {
+            return null;
+        }
+
+    }
+
     public boolean addModular(Integer courseId, String modularName) {
 
         Integer integer = null;
@@ -138,8 +147,9 @@ public class CourseService {
 
     public List<Chapter> getAllChapters(Integer courseId) {
 
+        System.out.println("courseId = " + courseId);
         List<Chapter> chapters = courseMapper.getChapters(courseId);
-
+        System.out.println("chapters = " + chapters);
         if (chapters != null && chapters.size() != 0) {
             return chapters;
         } else {

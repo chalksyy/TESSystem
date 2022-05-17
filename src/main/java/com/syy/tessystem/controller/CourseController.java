@@ -51,6 +51,7 @@ public class CourseController {
     @PostMapping(value = "/addCourse")
     public CommonResult<String> addCourse(@RequestBody HashMap<String, String> map) {
 
+
         String token = map.get("token");
         String checkup = checkup(token);
 
@@ -64,11 +65,52 @@ public class CourseController {
         String courseName = map.get("courseName");
         Integer mode = Integer.parseInt(map.get("mode"));
 
+
         Integer createrId = Integer.parseInt(checkup);
 
         boolean b = courseService.addCourse(number, credit, type, courseName, mode, createrId);
 
         return b ? new CommonResult<>(100, "添加成功") : new CommonResult<>(200, "添加失败");
+
+    }
+    @PostMapping(value = "/addCourseWithCM")
+    public CommonResult<String> addCourseWithCM(@RequestBody HashMap<String, Object> map) {
+
+        String token = (String) map.get("token");
+        String checkup = checkup(token);
+
+        if (checkup == null) {
+            return new CommonResult<>(200, "用户未登录或登录状态失效", null);
+        }
+
+        String number = (String) map.get("number");
+        Integer credit = Integer.parseInt((String) map.get("credit"));
+        String type = (String) map.get("type");
+        String courseName = (String) map.get("courseName");
+        Integer mode = Integer.parseInt((String) map.get("mode"));
+
+        if (courseService.getCourseByName(courseName)!=null){
+            return new CommonResult<>(300, "课程名已存在");
+        }
+
+        Integer createrId = Integer.parseInt(checkup);
+
+        Course course = new Course(null, number, credit, type, courseName, mode, createrId, null, null, 0);
+
+        List modularList = new ArrayList<>();
+        modularList.addAll((List) map.get("modularNameList"));
+
+        List chapterList = new ArrayList<>();
+        chapterList.addAll((List) map.get("chapterNameList"));
+
+
+        boolean b = courseService.addCourseWithCM(course, modularList, chapterList);
+
+        if (b) {
+            return new CommonResult<>(100, "添加成功");
+        } else {
+            return new CommonResult<>(200, "添加失败");
+        }
 
     }
     @PostMapping(value = "/deleteCourse")
@@ -91,6 +133,7 @@ public class CourseController {
 
     @PostMapping(value = "/getAllCourses")
     public CommonResult<List<Course>> getAllCourses(@RequestBody HashMap<String, String> map) {
+
 
         String token = map.get("token");
         String checkup = checkup(token);
@@ -206,7 +249,7 @@ public class CourseController {
         if (allChapters != null) {
             return new CommonResult<>(100, "查询成功", allChapters);
         } else {
-            return new CommonResult<>(200, "查询失败,该课程没有章节");
+            return new CommonResult<>(200, "查询失败,该课程没有章节,zqd");
         }
 
     }
@@ -220,6 +263,7 @@ public class CourseController {
         if (checkup == null) {
             return new CommonResult<>(200, "用户未登录或登录状态失效", null);
         }
+
 
         Integer courseId = Integer.parseInt(map.get("courseId"));
 
@@ -342,42 +386,7 @@ public class CourseController {
 
     }
 
-    @PostMapping(value = "/addCourseWithCM")
-    public CommonResult<String> addCourseWithCM(@RequestBody HashMap<String, Object> map) {
 
-        String token = (String) map.get("token");
-        String checkup = checkup(token);
-
-        if (checkup == null) {
-            return new CommonResult<>(200, "用户未登录或登录状态失效", null);
-        }
-
-        String number = (String) map.get("number");
-        Integer credit = Integer.parseInt((String) map.get("credit"));
-        String type = (String) map.get("type");
-        String courseName = (String) map.get("courseName");
-        Integer mode = Integer.parseInt((String) map.get("mode"));
-
-        Integer createrId = Integer.parseInt(checkup);
-
-        Course course = new Course(null, number, credit, type, courseName, mode, createrId, null, null, 0);
-
-        List modularList = new ArrayList<>();
-        modularList.addAll((List) map.get("modularNameList"));
-
-        List chapterList = new ArrayList<>();
-        chapterList.addAll((List) map.get("chapterNameList"));
-        System.out.println(chapterList);
-
-        boolean b = courseService.addCourseWithCM(course, modularList, chapterList);
-
-        if (b) {
-            return new CommonResult<>(100, "添加成功");
-        } else {
-            return new CommonResult<>(200, "添加失败");
-        }
-
-    }
 
     @PostMapping("/getCourses")
     public CommonResult<Object> getCourses(@RequestBody HashMap<String, String> map) {
@@ -404,6 +413,7 @@ public class CourseController {
         }
 
         try {
+            if(map.get("credit")!=null)
             credit = Integer.parseInt(map.get("credit"));
         } catch (NumberFormatException e) {
             e.printStackTrace();
@@ -420,11 +430,12 @@ public class CourseController {
         Integer status = null;
 
         try {
+            if(map.get("status")!=null)
             status = Integer.parseInt(map.get("status"));
 
-            if (status != 1 && status != 0) {
-                return new CommonResult<>(200, "输入数据有误");
-            }
+//            if (status != 1 && status != 0) {
+//                return new CommonResult<>(200, "输入数据有误");
+//            }
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -432,7 +443,7 @@ public class CourseController {
         if (courseName == null && status == null) {
             PageHelper.startPage(page, limit);
             List<Course> courseList = courseService.getCourses(credit,type,sortResult);
-            System.out.println(1);
+
 
             if (courseList != null) {
                 PageInfo pageInfo = new PageInfo(courseList);
@@ -444,7 +455,7 @@ public class CourseController {
         } else if (courseName == null && status != null) {
             PageHelper.startPage(page, limit);
             List<Course> courseList = courseService.getCourses(status,credit,type,sortResult);
-            System.out.println(2);
+
 
             if (courseList != null) {
                 PageInfo pageInfo = new PageInfo(courseList);
@@ -456,7 +467,7 @@ public class CourseController {
         } else if (courseName != null && status == null) {
             PageHelper.startPage(page, limit);
             List<Course> courseList = courseService.getCourses(courseName,credit,type,sortResult);
-            System.out.println(3);
+
 
             if (courseList != null) {
                 PageInfo pageInfo = new PageInfo(courseList);
@@ -468,7 +479,7 @@ public class CourseController {
         } else {
             PageHelper.startPage(page, limit);
             List<Course> courseList = courseService.getCourses(courseName, status,credit,type,sortResult);
-            System.out.println(4);
+
 
             if (courseList != null) {
                 PageInfo pageInfo = new PageInfo(courseList);

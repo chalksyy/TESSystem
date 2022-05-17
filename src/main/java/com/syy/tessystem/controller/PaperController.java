@@ -2,8 +2,11 @@ package com.syy.tessystem.controller;
 
 import com.syy.tessystem.entities.CommonResult;
 import com.syy.tessystem.entities.Paper;
+import com.syy.tessystem.entities.PaperAndQuestion;
+import com.syy.tessystem.entities.QuestionPublicSc;
 import com.syy.tessystem.service.PaperService;
 import com.github.pagehelper.PageInfo;
+import com.syy.tessystem.service.QuestionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -25,6 +28,9 @@ public class PaperController {
 
     @Resource
     PaperService paperService;
+
+    @Resource
+    QuestionService questionService;
 
     @Resource
     StringRedisTemplate stringRedisTemplate;
@@ -118,7 +124,7 @@ public class PaperController {
     }
 
     @RequestMapping("/getPaper")
-    public CommonResult<Paper> getPaper(@RequestBody HashMap<String, Object> map) {
+    public CommonResult<Map<String,Object>> getPaper(@RequestBody HashMap<String, Object> map) {
         String token = (String) map.get("token");
         String checkup = checkup(token);
 
@@ -129,9 +135,18 @@ public class PaperController {
         Integer paperId = Integer.parseInt(map.get("paperId").toString());
 
         Paper paper = paperService.getPaper(paperId);
+        List<QuestionPublicSc> questionPublicScList = questionService.getQuestionByPaperId(paperId);
+
+//        PaperAndQuestion paperAndQuestion = new PaperAndQuestion(paper.getId(),paper.getPaperName(),paper.getMaxMark(),paper.getCreatorId(),paper.getCourseId(),paper.getCreateTime(),paper.getChange(),null);
+
+
+
+        Map<String,Object> map1 = new HashMap();
+        map1.put("paper",paper);
+        map1.put("list",questionPublicScList);
 
         if (paper != null) {
-            return new CommonResult<>(100, "查找成功", paper);
+            return new CommonResult<>(100, "查找成功", map1);
         } else {
             return new CommonResult<>(200, "失败成功", null);
         }
@@ -154,6 +169,25 @@ public class PaperController {
 
         if (pageInfo != null) {
             return new CommonResult<>(100, "查找成功", pageInfo);
+        } else {
+            return new CommonResult<>(200, "失败成功", null);
+        }
+    }
+
+    @RequestMapping("/getAllPaper2")
+    public CommonResult<List<Paper>> getAllPaper2(@RequestBody HashMap<String, Object> map) {
+        String token = (String) map.get("token");
+        String checkup = checkup(token);
+
+        if (checkup == null) {
+            return new CommonResult<>(200, "用户未登录或登录状态失效", null);
+        }
+
+
+        List<Paper> paperList = paperService.getAllPaper2();
+
+        if (paperList != null) {
+            return new CommonResult<>(100, "查找成功", paperList);
         } else {
             return new CommonResult<>(200, "失败成功", null);
         }

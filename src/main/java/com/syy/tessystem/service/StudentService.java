@@ -45,6 +45,8 @@ public class StudentService {
         /*criteria.andPasswordEqualTo(password);*/
         List<Student> students = studentMapper.selectByExample(studentExample);
 
+        System.out.println("students = " + students);
+
         if (students.size() == 0) {
             return null;
         }

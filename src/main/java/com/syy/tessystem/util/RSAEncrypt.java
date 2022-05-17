@@ -158,8 +158,10 @@ public class RSAEncrypt {
         Resource resource = new ClassPathResource("configuration/private.key");
         InputStream inputStream = resource.getInputStream();
         byte[] privateKeyBytes = toByteArray(inputStream);
-
+        //+hcmwanRNwk0GkdgINQre7XT6THTeDZRWrH3o5cN5TdtYnDGh8kfx4H8fBlLs5sdc39yMNK6UcmukRHjHLXrEfoHheR0RN0hV9K4DPNcNSj15RJpX2MICBvmVlSXI=
+        //+hcmwanRNwk0GkdgINQre7XT6THTeDZRWrH3o5cN5TdtYnDGh8kfx4H8fBlLs5sdc39yMNK6UcmukRHjHLXrEfoHheR0RN0hV9K4DPNcNSj15RJpX2MICBvmVlSXI=
         //64位解码加密后的字符串
+        System.out.println("str"+str);
         byte[] inputByte = Base64.decodeBase64(str.getBytes("UTF-8"));
         //base64编码的私钥
         byte[] decoded = Base64.decodeBase64(privateKeyBytes);

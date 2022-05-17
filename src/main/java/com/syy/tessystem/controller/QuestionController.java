@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -56,6 +58,8 @@ public class QuestionController {
         String token = map.get("token");
         String checkup = checkup(token);
 
+
+
         if (checkup == null) {
             return new CommonResult<>(200, "用户未登录或登录状态失效", null);
         }
@@ -68,7 +72,7 @@ public class QuestionController {
         String answer = map.get("answer");
         //Integer createrId = Integer.valueOf(map.get("createrId"));
         Timestamp createTime = new Timestamp(System.currentTimeMillis());
-        System.out.println(createTime);
+
         Integer chapterId = Integer.valueOf(map.get("chapterId"));
         Integer modularId = Integer.valueOf(map.get("modularId"));
         Integer diffculyt = Integer.valueOf(map.get("diffculyt"));
@@ -181,9 +185,7 @@ public class QuestionController {
         String option3 = map.get("option3");
         String option4 = map.get("option4");
         String answer = map.get("answer");
-        //Integer createrId = Integer.valueOf(map.get("createrId"));
-//        Timestamp createTime = new Timestamp(System.currentTimeMillis());
-//        System.out.println(createTime);
+
         Integer chapterId = Integer.valueOf(map.get("chapterId"));
         Integer modularId = Integer.valueOf(map.get("modularId"));
         Integer diffculyt = Integer.valueOf(map.get("diffculyt"));
@@ -409,22 +411,10 @@ public class QuestionController {
 
     }
 
-    /*@PostMapping(value = "/getQue")
-    public CommonResult<String> getQue(@RequestBody HashMap<String,Object> map){
-
-        List<Map> list = (List<Map>) map.get("list");
-
-        Iterator<Map> iterator = list.iterator();
-
-        while (iterator.hasNext()){
-            System.out.println(iterator.next().get("a"));
-        }
-
-        return null;
-    }*/
 
     @PostMapping(value = "/getQuestion")
     public CommonResult<Object> getQuestion(@RequestBody HashMap<String, Object> map) {
+
 
         String token = (String) map.get("token");
         String checkup = checkup(token);
@@ -433,24 +423,23 @@ public class QuestionController {
             return new CommonResult<>(200, "用户未登录或登录状态失效");
         }
 
-        Integer courseId = Integer.parseInt((String) map.get("courseId"));
-
-        if (courseId == null) {
-            return new CommonResult<>(200, "courseId呢");
-        }
-
         String type = null;
         Integer chapterId = null;
         Integer modularId = null;
         String content = null;
         try {
-            chapterId = Integer.parseInt((String) map.get("chapterId"));
+            if (map.get("chapterId")!=null){
+                chapterId = Integer.parseInt((String) map.get("chapterId") );
+            }
+
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
 
         try {
-            modularId = Integer.parseInt((String) map.get("modularId"));
+            if (map.get("modularId")!=null){
+                modularId = Integer.parseInt((String) map.get("modularId") );
+            }
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -469,9 +458,10 @@ public class QuestionController {
         Integer limit = (Integer) map.get("limit");
 
         PageHelper.startPage(page, limit);
-        List<Object> list = questionService.getAllQuestionInConditionWithName(type, courseId, chapterId, modularId, content);
+        List<Object> list = questionService.getAllQuestionInConditionWithName(type,  chapterId, modularId, content);
 
         PageInfo pageInfo = new PageInfo(list);
+
         if (list != null && list.size() != 0) {
             return new CommonResult<>(100, "查询成功", pageInfo);
         } else {
@@ -504,6 +494,7 @@ public class QuestionController {
         }
 
         List<QuestionEntity> questions =  questionService.getQuestionEntity(type,questionIdList);
+
 
         if (questions!=null){
             return new CommonResult<>(100,"查询成功",questions);

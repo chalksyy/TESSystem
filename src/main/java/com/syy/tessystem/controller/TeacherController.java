@@ -49,9 +49,9 @@ public class TeacherController {
     @PostMapping(value = "/login")
     public CommonResult<String> login(@RequestBody HashMap<String, String> map) {
 
-        @NotNull
+
         Integer tNo = Integer.parseInt(map.get("tNo"));
-        @NotNull
+
         String password = map.get("password");
 
         String token = teacherService.login(tNo, password);

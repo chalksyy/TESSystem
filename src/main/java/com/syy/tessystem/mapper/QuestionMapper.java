@@ -52,7 +52,7 @@ public interface QuestionMapper {
      * @return
      */
     QuestionPublicSc get(@Param("id") Integer id);
-
+    List<QuestionPublicSc> getQuestionByPaperId(Integer id);
     int delete(@Param("id") Integer id);
 
     Integer update(@Param("id") Integer id,
@@ -161,26 +161,26 @@ public interface QuestionMapper {
 
     /**
      *  根据条件获得所有选择题
-     * @param courseId
+     * @param
      * @param chapterId
      * @param modularId
      * @param content
      * @return
      */
-    List<QuestionPublicScWithName> getQuestionScInCondition(@Param("courseId") Integer courseId,
+    List<QuestionPublicScWithName> getQuestionScInCondition(
                                                             @Param("chapterId") Integer chapterId,
                                                             @Param("modularId") Integer modularId,
                                                             @Param("content") String content);
 
     /**
      * 根据条件获得所有填空题
-     * @param courseId
+     * @param
      * @param chapterId
      * @param modularId
      * @param content
      * @return
      */
-    List<QuestionPublicCompWithName> getQuestionCompInCondition(@Param("courseId") Integer courseId,
+    List<QuestionPublicCompWithName> getQuestionCompInCondition(
                                                                 @Param("chapterId") Integer chapterId,
                                                                 @Param("modularId") Integer modularId,
                                                                 @Param("content") String content);

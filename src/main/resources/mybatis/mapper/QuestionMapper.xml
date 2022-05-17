@@ -95,6 +95,12 @@
         where id = #{id}
     </select>
 
+    <select id="getQuestionByPaperId" resultMap="choiceQuestionMap">
+        select *
+        from paper_quesion
+        where paper_id = #{id}
+    </select>
+
     <delete id="delete">
         delete
         from question_public_sc
@@ -184,11 +190,13 @@
         select q.*,m.modular_name,c.chapter_name
         from question_public_sc q,modular m,chapter c
         <trim prefix="where" prefixOverrides="and" suffix="" suffixOverrides="and">
-            q.course_id=#{courseId} and
+            1=1
+
             <if test="chapterId!=null">
 
                 q.chapter_id=#{chapterId} and
             </if>
+
             <if test="modularId!=null">
 
                 q.modualr_id=#{modularId} and
@@ -204,7 +212,7 @@
         select q.*,m.modular_name,c.chapter_name
         from question_public_completion q,modular m,chapter c
         <trim prefix="where" prefixOverrides="and" suffix="" suffixOverrides="and">
-            q.course_id =#{courseId} and
+            1=1
             <if test="chapterId!=null">
 
                 q.chapter_id=#{chapterId} and
