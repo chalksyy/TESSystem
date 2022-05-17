@@ -4,6 +4,8 @@ import com.syy.tessystem.entities.CommonResult;
 import com.syy.tessystem.entities.Student;
 import com.syy.tessystem.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +29,37 @@ public class StudentController {
     @Resource
     StudentService studentService;
 
+    @Resource
+    StringRedisTemplate stringRedisTemplate;
+
+    private String checkup(String token) {
+
+        ValueOperations<String, String> forValue = stringRedisTemplate.opsForValue();
+        String s = forValue.get("userToken:" + token);
+        if (s == null || s.length() == 0) {
+            return null;
+        }
+        return s;
+
+    }
+
     @PostMapping(value = "/register")
     public CommonResult register(@RequestBody Map<String,String> map){
+
+        String token = (String) map.get("token");
+        String checkup = checkup(token);
+
+        if (checkup == null) {
+            return new CommonResult<>(200, "用户未登录或登录状态失效", null);
+        }
+//sno, name, grade, password, gender, role
+        Integer sno = Integer.parseInt(map.get("sno"));
+        String name = map.get("name");
+        Integer grade = Integer.parseInt(map.get("grade"));
+        String password = map.get("password");
+        Integer gender = Integer.parseInt(map.get("gender"));
+
+        Integer result = studentService.add(sno,name,password,grade,gender);
 
         return new CommonResult(200,"添加学生成功",null);
     }

@@ -6,6 +6,7 @@ import com.syy.tessystem.mapper.StudentMapper;
 import com.syy.tessystem.util.CreateCode;
 import com.syy.tessystem.util.JavaWebToken;
 import com.syy.tessystem.util.RSAEncrypt;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,15 @@ public class StudentService {
     @Resource
     StringRedisTemplate stringRedisTemplate;
 
+    public int add(Integer sno,String name, String password,Integer grade,Integer gender){
+        String decrypt = "";
+        try {
+            decrypt = RSAEncrypt.encrypt(password);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return studentMapper.add(sno, name, decrypt, grade, gender);
+    }
 
     public Map<String, Object> login(Integer sNo, String password) {
 

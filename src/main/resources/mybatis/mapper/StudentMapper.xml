@@ -7,13 +7,25 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="head_img" jdbcType="VARCHAR" property="headImg" />
-    <result column="class_name" jdbcType="VARCHAR" property="className" />
-    <result column="major" jdbcType="VARCHAR" property="major" />
     <result column="grade" jdbcType="VARCHAR" property="grade" />
     <result column="password" jdbcType="VARCHAR" property="password" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="gender" jdbcType="VARCHAR" property="gender" />
   </resultMap>
+  <insert id="add">
+    insert into student(sno, name, grade, password, gender, role)
+    VALUES (#{sno},#{name},#{grade},#{password},#{gender},0)
+  </insert>
+  <update id="updatePassword">
+    update student
+    set password = #{password}
+    where id = #{id}
+  </update>
+
+  <update id="updateRole">
+    update student
+    set role = #{role}
+    where id = #{studentId}
+  </update>
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -72,9 +84,7 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Base_Column_List">
-    id, sno, name, phone, head_img, class_name, major, grade, password, email, gender
-  </sql>
+
   <select id="selectByExample" parameterType="com.syy.tessystem.entities.StudentExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -107,9 +117,8 @@
   </delete>
   <insert id="insert" parameterType="com.syy.tessystem.entities.Student">
     insert into student (id, sno, name, 
-      phone, head_img, class_name, 
-      major, grade, password, 
-      email, gender)
+      phone, head_img, grade, password,
+       gender)
     values (#{id,jdbcType=INTEGER}, #{sno,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
       #{phone,jdbcType=VARCHAR}, #{headImg,jdbcType=VARCHAR}, #{className,jdbcType=VARCHAR}, 
       #{major,jdbcType=VARCHAR}, #{grade,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
@@ -242,11 +251,8 @@
       name = #{record.name,jdbcType=VARCHAR},
       phone = #{record.phone,jdbcType=VARCHAR},
       head_img = #{record.headImg,jdbcType=VARCHAR},
-      class_name = #{record.className,jdbcType=VARCHAR},
-      major = #{record.major,jdbcType=VARCHAR},
       grade = #{record.grade,jdbcType=VARCHAR},
       password = #{record.password,jdbcType=VARCHAR},
-      email = #{record.email,jdbcType=VARCHAR},
       gender = #{record.gender,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -294,23 +300,10 @@
       name = #{name,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       head_img = #{headImg,jdbcType=VARCHAR},
-      class_name = #{className,jdbcType=VARCHAR},
-      major = #{major,jdbcType=VARCHAR},
       grade = #{grade,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
       gender = #{gender,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updatePassword">
-    update student
-    set password = #{password}
-    where id = #{id}
-  </update>
 
-  <update id="updateRole">
-    update student
-    set role = #{role}
-    where id = #{studentId}
-  </update>
 </mapper>

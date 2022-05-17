@@ -9,6 +9,21 @@ import java.util.List;
 
 @Mapper
 public interface StudentMapper {
+    /**
+     * create by: Chalksyy
+     * description: 添加学生
+     * create time: 2022/5/17 19:20
+     * @return
+     */
+    int add(@Param("sno") Integer sno,
+            @Param("name") String name,
+            @Param("password") String password,
+            @Param("grade") Integer grade,
+            @Param("gender") Integer gender);
+
+    Integer updateRole(@Param("studentId") Integer teacherId,
+                       @Param("role") Integer role);
+
     long countByExample(StudentExample example);
 
     int deleteByExample(StudentExample example);
@@ -33,6 +48,5 @@ public interface StudentMapper {
 
     int updateByPrimaryKey(Student record);
 
-    Integer updateRole(@Param("studentId") Integer teacherId,
-                       @Param("role") Integer role);
+
 }
