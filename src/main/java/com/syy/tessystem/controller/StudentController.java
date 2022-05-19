@@ -1,5 +1,6 @@
 package com.syy.tessystem.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.syy.tessystem.entities.CommonResult;
 import com.syy.tessystem.entities.Student;
 import com.syy.tessystem.service.StudentService;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,16 +54,15 @@ public class StudentController {
         if (checkup == null) {
             return new CommonResult<>(200, "用户未登录或登录状态失效", null);
         }
-//sno, name, grade, password, gender, role
         Integer sno = Integer.parseInt(map.get("sno"));
         String name = map.get("name");
-        Integer grade = Integer.parseInt(map.get("grade"));
+        String phone = map.get("phone");
         String password = map.get("password");
         Integer gender = Integer.parseInt(map.get("gender"));
 
-        Integer result = studentService.add(sno,name,password,grade,gender);
+        Integer result = studentService.add(sno,name,password,phone,gender);
 
-        return new CommonResult(200,"添加学生成功",null);
+        return result>0 ? new CommonResult<>(100,"添加成功"):new CommonResult<>(200,"添加失败");
     }
 
     @PostMapping(value = "/login")
@@ -90,6 +91,29 @@ public class StudentController {
 
     }
 
+    @PostMapping(value = "/update")
+    public CommonResult update(@RequestBody Map<String,String> map) {
+
+        String token = (String)map.get("token");
+        String checkResult = studentService.checkup(token);
+
+        if (checkResult==null){
+            return new CommonResult<>(200,"用户未登录或登录状态失效");
+        }
+
+        Integer id = Integer.parseInt(map.get("id"));
+        Integer sno = Integer.parseInt(map.get("sno"));
+        String name = map.get("name");
+        String password = map.get("password");
+        String phone = map.get("phone");
+        Integer gender = Integer.parseInt(map.get("gender"));
+
+        Integer result = studentService.update(id,sno,name,phone,password,gender);
+
+        return result>0 ? new CommonResult<>(100,"更新成功"):new CommonResult<>(200,"更新失败");
+
+    }
+
 
     @PostMapping(value = "/test")
     public String test(@RequestBody Map map){
@@ -100,7 +124,7 @@ public class StudentController {
 
     }
 
-    @PostMapping(value = "getCode")
+    @PostMapping(value = "/getCode")
     public CommonResult<String> getCode(@RequestBody Map map){
 
         String token = (String)map.get("token");
@@ -117,7 +141,7 @@ public class StudentController {
         return new CommonResult<>(100,"?",code);
     }
 
-    @PostMapping(value = "changePwd")
+    @PostMapping(value = "/changePwd")
     public CommonResult changePwd(@RequestBody Map map) {
         String oldPassword = (String) map.get("oldPassword");
         String token = (String) map.get("token");
@@ -126,7 +150,7 @@ public class StudentController {
 
     }
 
-    @PostMapping(value = "updateStudentRole")
+    @PostMapping(value = "/updateStudentRole")
     public CommonResult<String> updateStudentRole(@RequestBody HashMap<String,String> map){
 
         String token = map.get("token");
@@ -150,5 +174,52 @@ public class StudentController {
 
     }
 
+    @PostMapping(value = "/getStudent")
+    public CommonResult<Student> getStudent(@RequestBody HashMap<String,String> map){
+
+        String token = map.get("token");
+        String checkup = studentService.checkup(token);
+
+        if (checkup == null) {
+            return new CommonResult<>(200, "用户未登录或登录状态失效", null);
+        }
+
+        Student student = studentService.getById(Integer.parseInt(map.get("id")));
+
+        return student != null ? new CommonResult<>(100,"获取学生信息成功",student):new CommonResult<>(200,"获取学生信息失败");
+
+    }
+    @PostMapping(value = "/delete")
+    public CommonResult<String> delete(@RequestBody HashMap<String,String> map){
+
+        String token = map.get("token");
+        String checkup = studentService.checkup(token);
+
+        if (checkup == null) {
+            return new CommonResult<>(200, "用户未登录或登录状态失效", null);
+        }
+
+        Integer result = studentService.delete(Integer.parseInt(map.get("id")));
+
+        return result > 0 ? new CommonResult<>(100,"删除成功"):new CommonResult<>(200,"删除失败");
+
+    }
+
+
+    @PostMapping(value = "/getAllStudent")
+    public CommonResult<PageInfo<Student>> getAllStudent(@RequestBody HashMap<String,String> map){
+
+        String token = map.get("token");
+        String checkup = studentService.checkup(token);
+
+        if (checkup == null) {
+            return new CommonResult<>(200, "用户未登录或登录状态失效", null);
+        }
+
+        PageInfo<Student> studentList = studentService.getAll(map.get("numStr"),map.get("nameStr"),map.get("limit"),map.get("page"));
+
+        return studentList != null ? new CommonResult<>(100,"获取学生列表成功",studentList):new CommonResult<>(200,"获取学生列表失败");
+
+    }
 
 }

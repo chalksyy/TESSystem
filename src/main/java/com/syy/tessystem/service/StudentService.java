@@ -1,5 +1,7 @@
 package com.syy.tessystem.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.syy.tessystem.entities.Student;
 import com.syy.tessystem.entities.StudentExample;
 import com.syy.tessystem.mapper.StudentMapper;
@@ -36,14 +38,14 @@ public class StudentService {
     @Resource
     StringRedisTemplate stringRedisTemplate;
 
-    public int add(Integer sno,String name, String password,Integer grade,Integer gender){
+    public int add(Integer sno,String name, String password,String phone,Integer gender){
         String decrypt = "";
         try {
             decrypt = RSAEncrypt.encrypt(password);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return studentMapper.add(sno, name, decrypt, grade, gender);
+        return studentMapper.add(sno, name, decrypt, phone, gender);
     }
 
     public Map<String, Object> login(Integer sNo, String password) {
@@ -55,7 +57,7 @@ public class StudentService {
         /*criteria.andPasswordEqualTo(password);*/
         List<Student> students = studentMapper.selectByExample(studentExample);
 
-        System.out.println("students = " + students);
+
 
         if (students.size() == 0) {
             return null;
@@ -84,6 +86,41 @@ public class StudentService {
         } else {
             return null;
         }
+    }
+
+    public Student getById(Integer id){
+        Student student = studentMapper.getById(id);
+        try {
+            student.setPassword(RSAEncrypt.decrypt(student.getPassword()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return student;
+    }
+
+    public PageInfo<Student> getAll(String numStr,String nameStr,String limit,String page){
+
+        Integer pageNum = Integer.parseInt(page);
+        Integer pageSize = Integer.parseInt(limit);
+        PageHelper.startPage(pageNum, pageSize);
+        List<Student> studentList = studentMapper.getAll(numStr,nameStr);
+        PageInfo<Student> pageInfo = new PageInfo<>(studentList);
+        return pageInfo;
+    };
+
+    public Integer update(Integer id,Integer sno,String name,String phone,String password,Integer gender){
+        String decrypt = "";
+        try {
+            decrypt = RSAEncrypt.encrypt(password);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return studentMapper.update(id, sno, name, phone, decrypt, gender);
+    }
+
+    public Integer delete(Integer id){
+        return studentMapper.delete(id);
     }
 
 
@@ -160,8 +197,7 @@ public class StudentService {
         }
 
         if (student != null) {
-            System.out.println("id:"+id);
-            System.out.println("encrypt:"+encrypt);
+
             if(studentMapper.updatePassword(id,encrypt)>0){
                 return "AC";
             }

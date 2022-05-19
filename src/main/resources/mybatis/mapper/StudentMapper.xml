@@ -10,16 +10,46 @@
     <result column="grade" jdbcType="VARCHAR" property="grade" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="gender" jdbcType="VARCHAR" property="gender" />
+    <result column="role" jdbcType="INTEGER" property="role" />
   </resultMap>
   <insert id="add">
-    insert into student(sno, name, grade, password, gender, role)
-    VALUES (#{sno},#{name},#{grade},#{password},#{gender},0)
+    insert into student(sno, name, phone, password, gender, role)
+    VALUES (#{sno},#{name},#{phone},#{password},#{gender},0)
   </insert>
   <update id="updatePassword">
     update student
     set password = #{password}
     where id = #{id}
   </update>
+  <select id="getById" resultMap="BaseResultMap">
+    select *
+    from student
+    where id = #{id}
+  </select>
+  <select id="getAll" resultMap="BaseResultMap">
+    select *
+    from student
+    where 1 = 1
+    <if test="numStr!=null">
+      and (sno like '%${numStr}%')
+    </if>
+    <if test="nameStr!=null">
+      and (name like '%${nameStr}%')
+    </if>
+  </select>
+  <update id="update">
+    update student
+    set sno = #{sno},
+        name = #{name},
+        phone = #{phone},
+        password = #{password},
+        gender = #{gender}
+    where id = #{id}
+  </update>
+  <delete id="delete">
+    delete from student
+    where id = #{id}
+  </delete>
 
   <update id="updateRole">
     update student
@@ -305,5 +335,8 @@
       gender = #{gender,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <sql id="Base_Column_List">
+    id, sno, name, phone, head_img, class_name, major, grade, password, email, gender
+  </sql>
 
 </mapper>

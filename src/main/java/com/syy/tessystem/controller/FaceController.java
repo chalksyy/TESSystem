@@ -103,7 +103,6 @@ public class FaceController {
 
             JSONObject search = FaceSearch.search(AiFaceObject.getClient(), imageBase64, "BASE64", "student", checkup);
 
-            System.out.println(search);
 
             if ("SUCCESS".equals(search.get("error_msg"))){
                 return new CommonResult<>(100,"验证通过");

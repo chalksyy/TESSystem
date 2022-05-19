@@ -390,6 +390,7 @@ public class CourseController {
 
     @PostMapping("/getCourses")
     public CommonResult<Object> getCourses(@RequestBody HashMap<String, String> map) {
+        System.out.println("map = " + map);
 
         String token = map.get("token");
         String checkup = checkup(token);
