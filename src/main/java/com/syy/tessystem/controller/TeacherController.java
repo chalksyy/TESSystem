@@ -1,6 +1,8 @@
 package com.syy.tessystem.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.syy.tessystem.entities.CommonResult;
+import com.syy.tessystem.entities.Student;
 import com.syy.tessystem.entities.Teacher;
 import com.syy.tessystem.service.TeacherService;
 import com.syy.tessystem.util.JavaWebToken;
@@ -45,7 +47,25 @@ public class TeacherController {
         return s;
 
     }
+    @PostMapping(value = "/register")
+    public CommonResult register(@RequestBody Map<String,String> map){
 
+        String token = (String) map.get("token");
+        String checkup = checkup(token);
+
+        if (checkup == null) {
+            return new CommonResult<>(200, "用户未登录或登录状态失效", null);
+        }
+        Integer tno = Integer.parseInt(map.get("tno"));
+        String name = map.get("name");
+        String phone = map.get("phone");
+        String password = map.get("password");
+        Integer gender = Integer.parseInt(map.get("gender"));
+
+        Integer result = teacherService.add(tno,name,password,phone,gender);
+
+        return result>0 ? new CommonResult<>(100,"添加成功"):new CommonResult<>(200,"添加失败");
+    }
     @PostMapping(value = "/login")
     public CommonResult<String> login(@RequestBody HashMap<String, String> map) {
 
@@ -73,17 +93,14 @@ public class TeacherController {
             return new CommonResult<>(200, "用户未登录或登录状态失效", null);
         }
 
-        Map<String, Object> webToken = JavaWebToken.parserJavaWebToken(token);
-        Integer id = (Integer) webToken.get("id");
+        Teacher teacher = teacherService.getTeacher(Integer.parseInt(map.get("id")));
 
-        Teacher teacher = teacherService.getTeacher(id);
-
-        return teacher != null ? new CommonResult<>(100, "查询成功", teacher) : new CommonResult<>(200, "查询失败");
+        return teacher != null ? new CommonResult<>(100,"获取教师信息成功",teacher):new CommonResult<>(200,"获取教师信息失败");
 
     }
 
-    @PostMapping(value = "/getTeachers")
-    public CommonResult<List<Teacher>> getTeachers(@RequestBody HashMap<String, String> map) {
+    @PostMapping(value = "/getAllTeacher")
+    public CommonResult<PageInfo<Teacher>> getAllTeacher(@RequestBody HashMap<String, String> map) {
 
         String token = map.get("token");
         String checkup = checkup(token);
@@ -92,18 +109,14 @@ public class TeacherController {
             return new CommonResult<>(200, "用户未登录或登录状态失效", null);
         }
 
-        List<Teacher> teachers = teacherService.getTeachers();
+        PageInfo<Teacher> teacherList = teacherService.getAll(map.get("numStr"),map.get("nameStr"),map.get("limit"),map.get("page"));
 
-        if (teachers != null) {
-            return new CommonResult<>(100, "查询成功", teachers);
-        } else {
-            return new CommonResult<>(200, "查询失败");
-        }
+        return teacherList != null ? new CommonResult<>(100,"获取教师列表成功",teacherList):new CommonResult<>(200,"获取教师列表失败");
 
     }
 
-    @PostMapping(value = "/updateTeacher")
-    public CommonResult<String> updateTeacher(@RequestBody HashMap<String, String> map) {
+    @PostMapping(value = "/update")
+    public CommonResult<String> update(@RequestBody HashMap<String, String> map) {
 
         String token = map.get("token");
         String checkup = checkup(token);
@@ -112,16 +125,14 @@ public class TeacherController {
             return new CommonResult<>(200, "用户未登录或登录状态失效", null);
         }
 
-        Map<String, Object> webToken = JavaWebToken.parserJavaWebToken(token);
-        Integer id = (Integer) webToken.get("id");
-
-        String teacherName = map.get("name");
+        Integer id = Integer.parseInt(map.get("id"));
+        Integer tno = Integer.parseInt(map.get("tno"));
+        String name = map.get("name");
+        String password = map.get("password");
         String phone = map.get("phone");
-        String major = map.get("major");
-        String email = map.get("email");
-        String gender = map.get("gender");
+        Integer gender = Integer.parseInt(map.get("gender"));
 
-        Integer result = teacherService.updateTeacher(id, teacherName, phone, major, gender, email);
+        Integer result = teacherService.update(id,tno,name,phone,password,gender);
 
         return result > 0 ? new CommonResult<>(100, "更新成功") : new CommonResult<>(200, "更新失败");
 
@@ -148,6 +159,21 @@ public class TeacherController {
         }
 
         return result>0 ? new CommonResult<>(100,"更新成功"):new CommonResult<>(200,"更新失败");
+
+    }
+    @PostMapping(value = "/delete")
+    public CommonResult<String> delete(@RequestBody HashMap<String,String> map){
+
+        String token = map.get("token");
+        String checkup = checkup(token);
+
+        if (checkup == null) {
+            return new CommonResult<>(200, "用户未登录或登录状态失效", null);
+        }
+
+        Integer result = teacherService.delete(Integer.parseInt(map.get("id")));
+
+        return result > 0 ? new CommonResult<>(100,"删除成功"):new CommonResult<>(200,"删除失败");
 
     }
 

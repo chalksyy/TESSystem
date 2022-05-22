@@ -147,9 +147,7 @@ public class CourseService {
 
     public List<Chapter> getAllChapters(Integer courseId) {
 
-        System.out.println("courseId = " + courseId);
         List<Chapter> chapters = courseMapper.getChapters(courseId);
-        System.out.println("chapters = " + chapters);
         if (chapters != null && chapters.size() != 0) {
             return chapters;
         } else {
@@ -173,7 +171,7 @@ public class CourseService {
     public boolean updateCourse(Integer id, String number, Integer credit, String type, String courseName, Integer mode) {
 
         Integer update = courseMapper.update(id, number, credit, type, courseName, mode);
-        System.out.println("update = " + update);
+
 
         if (update > 0) {
             return true;

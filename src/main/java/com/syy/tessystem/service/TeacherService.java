@@ -1,5 +1,8 @@
 package com.syy.tessystem.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.syy.tessystem.entities.Student;
 import com.syy.tessystem.entities.Teacher;
 import com.syy.tessystem.mapper.TeacherMapper;
 import com.syy.tessystem.util.JavaWebToken;
@@ -28,6 +31,16 @@ public class TeacherService {
 
     @Resource
     StringRedisTemplate stringRedisTemplate;
+
+    public int add(Integer tno,String name, String password,String phone,Integer gender){
+        String decrypt = "";
+        try {
+            decrypt = RSAEncrypt.encrypt(password);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return teacherMapper.add(tno, name, decrypt, phone, gender);
+    }
 
     public String login(Integer tNo, String password) {
 
@@ -64,30 +77,38 @@ public class TeacherService {
     public Teacher getTeacher(Integer id) {
 
         Teacher teacher = teacherMapper.getTeacherById(id);
-
-        if (teacher != null) {
-            return teacher;
-        } else {
-            return null;
+        try {
+            teacher.setPassword(RSAEncrypt.decrypt(teacher.getPassword()));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+        return teacher;
 
     }
 
-    public List<Teacher> getTeachers() {
+    public PageInfo<Teacher> getAll(String numStr,String nameStr,String limit,String page){
 
-        List<Teacher> teachers = teacherMapper.getTeachers();
-
-        if (teachers != null && teachers.size() != 0) {
-            return teachers;
-        } else {
-            return null;
-        }
+        Integer pageNum = Integer.parseInt(page);
+        Integer pageSize = Integer.parseInt(limit);
+        PageHelper.startPage(pageNum, pageSize);
+        List<Teacher> teacherList = teacherMapper.getAll(numStr,nameStr);
+        PageInfo<Teacher> pageInfo = new PageInfo<>(teacherList);
+        return pageInfo;
 
     }
+    public Integer delete(Integer id){
+        return teacherMapper.delete(id);
+    }
 
-    public Integer updateTeacher(Integer teacherId, String teacherName,String phone,String major,String gender,String email){
-
-        return teacherMapper.updateTeacher(teacherId, teacherName, phone, major, gender, email);
+    public Integer update(Integer id,Integer tno,String name,String phone,String password,Integer gender){
+        String decrypt = "";
+        try {
+            decrypt = RSAEncrypt.encrypt(password);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return teacherMapper.updateTeacher(id, tno, name, phone, decrypt, gender);
     }
 
     public Integer updateRole(Integer teacherId,Integer role){

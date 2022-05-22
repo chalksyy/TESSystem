@@ -14,6 +14,10 @@
     <result column="role" property="role"></result>
   </resultMap>
 
+  <insert id="add">
+    insert into teacher(tno, name, phone, password, gender, role)
+    VALUES (#{tno},#{name},#{phone},#{password},#{gender},0)
+  </insert>
   <select id="login" resultMap="BaseResultMap">
     select *
     from teacher
@@ -28,17 +32,28 @@
 
   <update id="updateTeacher">
     update teacher
-    set name = #{teacherName},
+    set tno = #{tno},
+        name = #{name},
         phone = #{phone},
-        major = #{major},
-        gender = #{gender},
-        email = #{email}
-    where id = #{teacherId}
+        password = #{password},
+        gender = #{gender}
+    where id = #{id}
   </update>
+  <delete id="delete">
+    delete from teacher
+    where id = #{id}
+  </delete>
 
-  <select id="getTeachers" resultMap="BaseResultMap">
+  <select id="getAll" resultMap="BaseResultMap">
     select *
     from teacher
+    where 1 = 1
+    <if test="numStr!=null">
+      and (tno like '%${numStr}%')
+    </if>
+    <if test="nameStr!=null">
+      and (name like '%${nameStr}%')
+    </if>
   </select>
 
   <update id="updateRole">

@@ -189,7 +189,7 @@ public class QuestionService {
 
     }
     public List getAllQuestionInConditionWithName(String type,  Integer chapterId, Integer modularId, String content) {
-        System.out.println("type = " + type + ",  chapterId = " + chapterId + ", modularId = " + modularId + ", content = " + content);
+
         List<QuestionPublicScWithName> questionScInCondition = null;
         List<QuestionPublicCompWithName> questionCompInCondition = null;
 

@@ -1,5 +1,6 @@
 package com.syy.tessystem.mapper;
 
+import com.syy.tessystem.entities.Student;
 import com.syy.tessystem.entities.Teacher;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -14,6 +15,18 @@ import java.util.List;
  */
 @Mapper
 public interface TeacherMapper {
+    int add(@Param("tno") Integer tno,
+            @Param("name") String name,
+            @Param("password") String password,
+            @Param("phone") String phone,
+            @Param("gender") Integer gender);
+    /**
+     * create by: Chalksyy
+     * description: TODO
+     * create time: 2022/5/22 18:37
+     * @return
+     */
+    Integer delete(@Param("id") Integer id);
     /**
      * 通过tNo返回信息
      * @param tNo
@@ -36,18 +49,19 @@ public interface TeacherMapper {
       * @Param: null
      * @return
      */
-    Integer updateTeacher(@Param("teacherId") Integer teacherId,
-                          @Param("teacherName") String teacherName,
+    Integer updateTeacher(@Param("id") Integer id,
+                          @Param("tno") Integer tno,
+                          @Param("name") String name,
                           @Param("phone") String phone,
-                          @Param("major") String major,
-                          @Param("gender") String gender,
-                          @Param("email") String email);
+                          @Param("password") String password,
+                          @Param("gender") Integer gender);
 
     /**
      * 获得所有老师信息
      * @return
      */
-    List<Teacher> getTeachers();
+    List<Teacher> getAll(@Param("numStr") String numStr,
+                         @Param("nameStr") String nameStr);
 
 
     Integer updateRole(@Param("teacherId") Integer teacherId,
